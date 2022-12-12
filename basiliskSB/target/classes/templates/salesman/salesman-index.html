@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout :: head}"></head>
+<body class="main-body" th:data-role="${#authentication.getAuthorities()}">
+	<nav th:replace="~{layout :: navigation}"></nav>
+	<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+	<main>
+		<div class="grid-container salesman-index">
+		    <form method="get" class="filter" th:attr="action=@{/salesman/index}">
+		        <input type="text" name="employeeNumber" placeholder="Employee Number..." th:attr="value=${employeeNumber}">
+		        <input type="text" name="name" placeholder="Full Name..." th:attr="value=${name}">
+		        <select name="employeeLevel">
+		        	<option th:value=null>No Specific Level</option>
+			        <option th:each="option : ${employeeLevelDropdown}" th:attr="value=${option.value}"
+			        	th:text="${option.text}" th:selected="${option.value == employeeLevel}"></option>
+		        </select>
+		        <input type="text" name="superiorName" placeholder="Superior Name..." th:attr="value=${superiorName}">
+		        <button class="blue-button" type="submit">Search</button>
+		    </form>
+		    <a class="blue-button create-button" th:href="@{/salesman/upsertForm}">Insert New Salesman</a>
+			<table>
+		        <thead>
+		            <tr>
+		                <th>Action</th>
+		                <th>Employee Number</th>
+		                <th>Full Name</th>
+		                <th>Level</th>
+		                <th>Superior</th>
+		            </tr>
+		        </thead>
+				<tbody>	
+					<tr th:each="salesman : ${grid}" th:object="${salesman}">
+						<td>
+							<a th:href="@{/salesman/upsertForm(employeeNumber=*{employeeNumber})}" class="blue-button update-button">Edit</a>
+							<a th:href="@{/salesman/delete(employeeNumber=*{employeeNumber})}" class="blue-button delete-button">Delete</a>
+							<a th:href="@{/salesman/detail(employeeNumber=*{employeeNumber})}" class="blue-button detail-button">Region</a>
+						</td>
+						<td th:text="*{employeeNumber}"></td>
+						<td th:text="*{fullName}"></td>
+						<td th:text="*{level}"></td>
+						<td th:text="*{superior}"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+		            <tr>
+		                <td colspan="5">
+		                    <div class="pagination">
+		                        <div th:text="|page ${currentPage} of ${totalPages}|"></div>
+		                        <div th:if="${totalPages != 0}">
+									<a th:each="loop:${#numbers.sequence(1,totalPages)}" 
+										th:href="@{/salesman/index(page=${loop},employeeNumber=${employeeNumber},name=${name},employeeLevel=${employeeLevel},superiorName=${superiorName})}"
+										th:text="${loop}"></a>									
+		                        </div>
+		                    </div>
+		                </td>
+		            </tr>
+		        </tfoot>
+			</table>
+		</div>
+	</main>
+	<footer th:replace="~{layout :: footer}"></footer>
+	<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>

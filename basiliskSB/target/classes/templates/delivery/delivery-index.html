@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout :: head}"></head>
+<body class="main-body" th:data-role="${#authentication.getAuthorities()}">
+	<nav th:replace="~{layout :: navigation}"></nav>
+	<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+	<main>
+		<div class="grid-container delivery-index">
+		    <form method="get" class="filter" th:attr="action=@{/delivery/index}">
+		        <input type="text" name="company" placeholder="Company Name..." th:attr="value=${company}">
+		        <button class="blue-button" type="submit">Search</button>
+		    </form>
+		    <a class="blue-button create-button" th:href="@{/delivery/upsertForm}">Insert New Delivery</a>
+			<table>
+		        <thead>
+		            <tr>
+		                <th>Action</th>
+		                <th>Company</th>
+		                <th>Phone</th>
+		                <th>Cost</th>
+		            </tr>
+		        </thead>
+				<tbody>		
+					<tr th:each="delivery: ${grid}" th:object="${delivery}">
+						<td>
+							<a th:href="@{/delivery/upsertForm(id=*{id})}" class="blue-button update-button">Edit</a>
+							<a th:href="@{/delivery/delete(id=*{id})}" class="blue-button delete-button">Delete</a>
+						</td>
+						<td th:text="*{companyName}"></td>
+						<td th:text="*{phone}"></td>
+						<td th:text="${#numbers.formatCurrency(delivery.cost)}"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+		            <tr>
+		                <td colspan="4">
+		                    <div class="pagination">
+		                        <div th:text="|page ${currentPage} of ${totalPages}|"></div>
+		                        <div th:if="${totalPages != 0}">
+									<a th:each="loop:${#numbers.sequence(1,totalPages)}" 
+										th:href="@{/delivery/index(page=${loop},company=${company})}"
+										th:text="${loop}"></a>
+		                        </div>
+		                    </div>
+		                </td>
+		            </tr>
+		        </tfoot>
+			</table>
+		</div>
+	</main>
+	<footer th:replace="~{layout :: footer}"></footer>
+	<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>

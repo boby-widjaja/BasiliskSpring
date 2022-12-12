@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout :: head}"></head>
+<body class="main-body" th:data-role="${#authentication.getAuthorities()}">
+	<nav th:replace="~{layout :: navigation}"></nav>
+	<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+	<main>
+		<div class="grid-container salesman-detail">
+			<section class="header-info">
+		        <div>Employee Number: <span th:text="${headerEmployeeNumber}"></span></div>
+		        <div>Full Name: <span th:text=${headerFullName}></span></div>
+		    </section>
+		    <form method="get" class="filter" th:attr="action=@{/salesman/detail}">
+		    	<input type="hidden" name="employeeNumber" th:attr="value=${headerEmployeeNumber}">
+		        <input type="text" name="city" placeholder="Region Name..." th:attr="value=${city}">
+		        <button class="blue-button" type="submit">Search</button>
+		    </form>
+		    <a class="blue-button create-button" 
+		    	th:href="@{/salesman/assignDetailForm(employeeNumber=${headerEmployeeNumber})}">Assign New Region</a>
+			<table>
+		        <thead>
+		            <tr>
+		                <th>Action</th>
+		                <th>City</th>
+		                <th>Remark</th>
+		            </tr>
+		        </thead>
+		        <tbody> 			
+					<tr th:each="region : ${grid}" th:object="${region}">
+						<td>
+							<a th:href="@{/salesman/deleteDetail(employeeNumber=${headerEmployeeNumber},regionId=${region.id})}" 
+								class="blue-button delete-button">Delete</a>
+						</td>
+						<td th:text="*{city}"></td>
+						<td th:text="*{remark}"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+		            <tr>
+		                <td colspan="5">
+		                    <div class="pagination">
+		                        <div th:text="|page ${currentPage} of ${totalPages}|"></div>
+		                        <div th:if="${totalPages != 0}">
+									<a th:each="loop:${#numbers.sequence(1,totalPages)}" 
+										th:href="@{/salesman/detail(page=${loop},employeeNumber=${headerEmployeeNumber},city=${city})}"
+										th:text="${loop}"></a>
+		                        </div>
+		                    </div>
+		                </td>
+		            </tr>
+		        </tfoot>
+			</table>
+		</div>
+	</main>
+	<footer th:replace="~{layout :: footer}"></footer>
+	<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>

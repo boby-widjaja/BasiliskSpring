@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout :: head}"></head>
+<body class="main-body" th:data-role="${#authentication.getAuthorities()}">
+	<nav th:replace="~{layout :: navigation}"></nav>
+	<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+	<main>
+		<div class="grid-container supplier-index">
+		    <form method="get" class="filter" th:attr="action=@{/supplier/index}">
+		        <input type="text" name="company" placeholder="Company Name..." th:attr="value=${company}">
+		        <input type="text" name="contact" placeholder="Contact Name..." th:attr="value=${contact}">
+		        <input type="text" name="jobTitle" placeholder="Job Title..." th:attr="value=${jobTitle}">
+		        <button class="blue-button" type="submit">Search</button>
+		    </form>
+		    <a class="blue-button create-button" th:href="@{/supplier/upsertForm}">Insert New Supplier</a>
+			<table>
+		        <thead>
+		            <tr>
+		                <th>Action</th>
+		                <th>Company</th>
+		                <th>Contact</th>
+		                <th>JobTitle</th>
+		            </tr>
+		        </thead>
+			    <tbody>
+					<tr th:each="supplier : ${grid}" th:object="${supplier}">
+						<td>
+							<a th:href="@{/supplier/upsertForm(id=${supplier.id})}" class="blue-button update-button">Edit</a>
+							<a th:href="@{/supplier/delete(id=${supplier.id})}" class="blue-button delete-button">Delete</a>
+						</td>
+						<td th:text="*{companyName}"></td>
+						<td th:text="*{contactPerson}"></td>
+						<td th:text="*{jobTitle}"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+		            <tr>
+		                <td colspan="4">
+		                    <div class="pagination">
+		                        <div th:text="|page ${currentPage} of ${totalPages}|"></div>
+		                        <div th:if="${totalPages != 0}">
+									<a th:each="loop:${#numbers.sequence(1,totalPages)}" 
+										th:href="@{/supplier/index(page=${loop},company=${company},contact=${contact},jobTitle=${jobTitle})}"
+										th:text="${loop}"></a>
+		                        </div>
+		                    </div>
+		                </td>
+		            </tr>
+		        </tfoot>
+			</table>
+		</div>
+	</main>
+	<footer th:replace="~{layout :: footer}"></footer>
+	<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>

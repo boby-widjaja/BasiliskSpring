@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout :: head}"></head>
+<body class="main-body" th:data-role="${#authentication.getAuthorities()}">
+	<nav th:replace="~{layout :: navigation}"></nav>
+	<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+	<main>
+		<form method="post" class="upsert-form" th:attr="action=@{/order/upsertDetail}" th:object="${dto}">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<input type="hidden" th:field="*{id}"/>
+			<input type="hidden" th:field="*{invoiceNumber}"/>
+		    <table>
+		        <tbody>
+		            <tr>
+		                <td><label>Product*</label></td>
+		                <td>
+					        <select th:field="*{productId}">
+					        	<option th:value=null>No Specific Product</option>
+							    <option th:each="option : ${productDropdown}" th:value="${option.value}"
+							    	th:text="${option.text}" th:selected="${option.value == productId}"/>
+					        </select>
+		                    <div class="field-validation-error" th:errors="*{productId}"></div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label>Quantity*</label></td>
+		                <td>
+		                    <input type="number" min="0" th:field="*{quantity}">
+		                	<div class="field-validation-error" th:errors="*{quantity}"></div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label>Discount(%)*</label></td>
+		                <td>
+		                    <input type="text" class="moneyConversion" th:field="*{discount}">
+		                	<div class="field-validation-error" th:errors="*{discount}"></div>
+		                </td>
+		            </tr>
+		        </tbody>
+		    </table>
+		    <button class="blue-button" type="submit" th:text="${type} + ' Order Detail'"></button>
+		</form>
+	</main>
+	<footer th:replace="~{layout :: footer}"></footer>
+	<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>

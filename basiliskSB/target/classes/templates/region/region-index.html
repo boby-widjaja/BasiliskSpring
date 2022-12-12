@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout :: head}"></head>
+<body class="main-body" th:data-role="${#authentication.getAuthorities()}">
+	<nav th:replace="~{layout :: navigation}"></nav>
+	<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+	<main>
+		<div class="grid-container region-index">
+		    <form method="get" class="filter" th:attr="action=@{/region/index}">
+		        <input type="text" name="city" placeholder="Region City..." th:attr="value=${city}">
+		        <button class="blue-button" type="submit">Search</button>
+		    </form>
+		    <a class="blue-button create-button" th:href="@{/region/upsertForm}">Insert New Region</a>
+			<table>
+		        <thead>
+		            <tr>
+		                <th>Action</th>
+		                <th>City</th>
+		                <th>Remark</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+					<tr th:each="region: ${grid}" th:object="${region}">
+						<td>
+							<a th:href="@{/region/upsertForm(id=*{id})}" class="blue-button update-button">Edit</a>
+							<a th:href="@{/region/delete(id=*{id})}" class="blue-button delete-button">Delete</a>
+							<a th:href="@{/region/detail(id=*{id})}" class="blue-button salesman-button">Salesmen</a>
+						</td>
+						<td th:text="*{city}"></td>
+						<td th:text="*{remark}"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+		            <tr>
+		                <td colspan="3">
+		                    <div class="pagination">
+		                        <div th:text="|page ${currentPage} of ${totalPages}|"></div>
+		                        <div th:if="${totalPages != 0}">
+								    <a th:each="loop:${#numbers.sequence(1,totalPages)}" 
+										th:href="@{/region/index(page=${loop},city=${city})}"
+										th:text="${loop}"></a>
+		                        </div>
+		                    </div>
+		                </td>
+		            </tr>
+		        </tfoot>
+			</table>
+		</div>
+	</main>
+	<footer th:replace="~{layout :: footer}"></footer>
+	<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>

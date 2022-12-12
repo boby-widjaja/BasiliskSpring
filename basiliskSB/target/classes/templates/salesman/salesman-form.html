@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout :: head}"></head>
+<body class="main-body" th:data-role="${#authentication.getAuthorities()}">
+	<nav th:replace="~{layout :: navigation}"></nav>
+	<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+	<main>
+		<form method="post" class="upsert-form alternate-action" th:object="${dto}">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+		    <table th:attr="data-action=${type}">      
+		    	<tbody>
+		            <tr>
+		                <td><label>Employee Number*</label></td>
+		                <td>
+		                    <input type="text" th:field="*{employeeNumber}" class="readonly-id">
+		                	<div class="field-validation-error" th:errors="*{employeeNumber}"></div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label>First Name*</label></td>
+		                <td>
+		                    <input type="text" th:field="*{firstName}">
+		                	<div class="field-validation-error" th:errors="*{firstName}"></div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label>Last Name</label></td>
+		                <td>
+		                    <input type="text" th:field="*{lastName}">
+		                	<div class="field-validation-error" th:errors="*{lastName}"></div>
+		                </td>
+		            </tr>            
+		            <tr>
+		                <td><label>Employee Level*</label></td>
+		                <td>
+					        <select th:field="*{level}">
+					        	<option th:value=null>No Specific Level</option>
+							    <option th:each="option : ${employeeLevelDropdown}" th:value="${option.value}"
+							    	th:text="${option.text}" th:selected="${option.value == level}"/>
+					        </select>
+		                    <div class="field-validation-error" th:errors="*{level}"></div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label>Birth Date (month/date/year)*</label></td>
+		                <td>
+		                    <input type="date" th:field="*{birthDate}">
+		                	<div class="field-validation-error" th:errors="*{birthDate}"></div>
+		                </td>
+		            </tr> 
+		            <tr>
+		                <td><label>Hired Date (month/date/year)*</label></td>
+		                <td>
+		                    <input type="date" th:field="*{hiredDate}">
+		                	<div class="field-validation-error" th:errors="*{hiredDate}"></div>
+		                	<div class="field-validation-error" th:errors="${dto}"></div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td class="textarea-label"><label>Address</label></td>
+		                <td>
+		                	<textarea th:field="*{address}"></textarea>
+		                	<div class="field-validation-error" th:errors="*{address}"></div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label>City</label></td>
+		                <td>
+		                	<input type="text" th:field="*{city}">
+		                	<div class="field-validation-error" th:errors="*{city}"></div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label>Superior</label></td>
+		                <td>
+					        <select th:field="*{superiorEmployeeNumber}">
+					        	<option th:value=null>No Specific Salesman</option>
+							    <option th:each="option : ${superiorDropdown}" th:value="${option.value}"
+							    	th:text="${option.text}" th:selected="${option.value == superiorEmployeeNumber}"/>
+					        </select>
+		                    <div class="field-validation-error" th:errors="*{superiorEmployeeNumber}"></div>
+		                </td>
+		            </tr>
+		        </tbody>
+		    </table>
+		    <button class="blue-button" type="submit" th:text="${type} + ' Salesman'"></button>
+		</form>
+	</main>
+	<footer th:replace="~{layout :: footer}"></footer>
+	<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>

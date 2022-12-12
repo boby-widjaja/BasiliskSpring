@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout :: head}"></head>
+<body class="main-body" th:data-role="${#authentication.getAuthorities()}">
+	<nav th:replace="~{layout :: navigation}"></nav>
+	<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+	<main>
+		<div class="fail-container">
+		    <p>There is/are <span th:text="${dependencies}"></span> order detail(s) record found which are bought this product.</p>
+		    <p>You can't delete this product while those order detail(s) is/are dependent to this product.</p>
+		</div>
+		<a class="blue-button" th:href="@{/product/index}">back to index</a>
+	</main>
+	<footer th:replace="~{layout :: footer}"></footer>
+	<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>
